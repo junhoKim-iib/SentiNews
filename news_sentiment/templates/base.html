@@ -1,0 +1,34 @@
+<!-- base.html -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">Naver 뉴스 감성 분석</a> <!-- 여기에 로고 넣기. 클릭 시 홈 이동-->
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          {% if user.is_authenticated %}
+          <li><a href="#">내 북마크</a></li>
+          <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
+          {% else %}
+          <li><a href="{% url 'register' %}"><span class="glyphicon glyphicon-user"></span> 회원가입</a></li>
+          <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> 로그인</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
