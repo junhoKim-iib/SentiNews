@@ -1,34 +1,80 @@
 <!-- base.html -->
+
 {% load static %}
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-  </head>
-  <body>
-    <nav class="navbar navbar-inverse">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="/">Naver 뉴스 감성 분석</a> <!-- 여기에 로고 넣기. 클릭 시 홈 이동-->
-        </div>
-        <ul class="nav navbar-nav navbar-right">
-          {% if user.is_authenticated %}
-          <li><a href="#">내 북마크</a></li>
-          <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> 로그아웃</a></li>
-          {% else %}
-          <li><a href="{% url 'register' %}"><span class="glyphicon glyphicon-user"></span> 회원가입</a></li>
-          <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in"></span> 로그인</a></li>
-          {% endif %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
+  <title>Document</title>
+</head>
+<body>
+
+  <!-- 네비게이션 바 -->
+  <nav class="py-2 bg-light border-bottom">
+    <div class="container d-flex flex-wrap">
+      <ul class="nav me-auto">
+        <li class="nav-item"><a href="/" class="nav-link link-dark px-2 active" aria-current="page">뉴스 분석</a></li>
+        <li class="nav-item"><a href="" class="nav-link link-dark px-2">Features</a></li>
+        <li class="nav-item"><a href="" class="nav-link link-dark px-2">Pricing</a></li>
+        <li class="nav-item"><a href="" class="nav-link link-dark px-2">FAQs</a></li>
+        <li class="nav-item"><a href="" class="nav-link link-dark px-2">About</a></li>
+      </ul>
+      <ul class="nav">
+        {% if user.is_authenticated %}
+        <li class="nav-item"><a href="{% url 'mypage' %}" class="nav-link link-dark px-2">Mypage</a></li>
+        <li class="nav-item"><a href="{% url 'home' %}" class="nav-link link-dark px-2">Logout</a></li>
+        {% else %}
+        <li class="nav-item"><a href="{% url 'login' %}" class="nav-link link-dark px-2">Login</a></li>
+        <li class="nav-item"><a href="{% url 'register' %}" class="nav-link link-dark px-2">Sign up</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+<!-- 네비게이션 바 끝-->
+
+
+{%block content%}
+
+{%endblock%}
+
+
+<!-- footer 여기에 -->
+  <footer class="pt-4 my-md-5 pt-md-5 border-top">
+    <div class="row">
+      <div class="col-12 col-md">
+        <img class="mb-2" src="{% static 'bootstrap/docs/5.0/assets/brand/bootstrap-logo.svg' %}" alt="" width="24" height="19">
+        <small class="d-block mb-3 text-muted">&copy; 2017–2021</small>
+      </div>
+      <div class="col-6 col-md">
+        <h5>Features</h5>
+        <ul class="list-unstyled text-small">
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Cool stuff</a></li>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Random feature</a></li>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team feature</a></li>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Stuff for developers</a></li>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another one</a></li>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Last time</a></li>
         </ul>
       </div>
-    </nav>
+      <div class="col-6 col-md">
+        <h5>Resources</h5>
+        <ul class="list-unstyled text-small">
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource</a></li>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource name</a></li>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another resource</a></li>
+          <li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Final resource</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md">
+        <h5>About</h5>
+        <ul class="list-unstyled text-small">
+          <li class="mb-1"><a class="link-secondary text-decoration-none
 
-    <div class="container">
-      {% block content %}
-      {% endblock %}
-    </div>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>

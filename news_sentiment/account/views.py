@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import RegistrationForm, LoginForm
 from django.views.generic import TemplateView
+
+
 class HomeView(TemplateView):
     template_name = 'account/home.html'
 
@@ -14,8 +16,15 @@ def register(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Registration successful')
-            return redirect('account/login.html')
-    else:
+            return redirect('login')
+        
+        else:
+            # print specific error message for user to register and let them know what they did wrong
+             for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f'{field.capitalize()}: {error}')
+
+    else: 
         form = RegistrationForm()
 
     return render(request, 'account/register.html', {'form': form})
@@ -30,7 +39,7 @@ def login_view(request): # login view
             user = authenticate(request, email=email, password=password) 
             if user is not None: 
                 login(request, user) 
-                return redirect('news_list') 
+                return redirect('home') 
             else: 
                 messages.error(request, 'Invalid email or password') 
     else:
@@ -42,3 +51,7 @@ def login_view(request): # login view
 def logout_view(request):
     logout(request)
     return redirect('account/login.html')
+
+
+def mypage(request):
+    return render(request, 'account/mypage.html', {})
