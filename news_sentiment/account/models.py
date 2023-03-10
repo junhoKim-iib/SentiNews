@@ -30,6 +30,8 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
+    password = models.CharField(max_length=128)
+    last_login = models.DateTimeField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
@@ -49,3 +51,6 @@ class User(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+
+    class Meta:
+        db_table = 'account'

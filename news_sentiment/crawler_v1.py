@@ -92,7 +92,7 @@ def get_secret(setting, secrets=secrets):
         raise ImproperlyConfigured(error_msg)
 
 DB_HOST = get_secret("DB_HOST")
-DB_DATABASE = get_secret("DB_DATABASE")
+DB_DATABASE_NEWS = get_secret("DB_DATABASE_NEWS")
 DB_USER = get_secret("DB_USER")
 DB_PASSWORD = get_secret("DB_PASSWORD")
 
@@ -101,7 +101,7 @@ DB_PASSWORD = get_secret("DB_PASSWORD")
 #logging.basicConfig(level=logging.DEBUG)
 
 def insert_news_data(data):
-    conn = psycopg2.connect(host=DB_HOST, database=DB_DATABASE, user=DB_USER, password=DB_PASSWORD)
+    conn = psycopg2.connect(host=DB_HOST, database=DB_DATABASE_NEWS, user=DB_USER, password=DB_PASSWORD)
     cur = conn.cursor()
     for item in data:
         cur.execute("INSERT INTO news (subject, date, summary, content, url) VALUES (%s, %s, %s, %s, %s)", (item['subject'], item['date'], item['summary'], item['content'], item['url']))

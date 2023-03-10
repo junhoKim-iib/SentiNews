@@ -3,25 +3,7 @@
 {% block title %}로그인{% endblock %}
 
 {% block content %}
-  <div class="login-form">
-    <h2>로그인</h2>
-    <form method="post" novalidate>
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="{{ form.email.id_for_label }}">이메일</label>
-        <input type="email" class="form-control" id="{{ form.email.id_for_label }}" name="{{ form.email.name }}" value="{{ form.email.value|default:'' }}" required>
-      </div>
-      <div class="form-group">
-        <label for="{{ form.password.id_for_label }}">비밀번호</label>
-        <input type="password" class="form-control" id="{{ form.password.id_for_label }}" name="{{ form.password.name }}" required>
-      </div>
-      <button type="submit" class="btn btn-primary">로그인</button>
-  <p>회원이 아니라면 <a href="{% url 'register' %}">회원가입</a>하세요.</p>
-    </form>
-  </div>
 
-
-  <!-- 수정 하기 -->
    <div class="modal-dialog" role="document" style="width:450px;">
     <div class="modal-content rounded-4 shadow">
       <div class="modal-header p-5 pb-4 border-bottom-0">
