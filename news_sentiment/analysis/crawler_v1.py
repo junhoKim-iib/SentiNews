@@ -36,7 +36,13 @@ def get_main_news(date):
         content_res = requests.get(link, headers=headers)
         content_res.raise_for_status()
         content_soup = BeautifulSoup(content_res.text, 'html.parser')
-        content = content_soup.select_one('div#content').text.strip()
+
+
+        try:
+            content = content_soup.select_one('div#content').text.strip()
+        
+        except:
+            continue
         
         item = {'subject': title, 'url': link, 'content': content, 'date': date}
         # 결과 출력

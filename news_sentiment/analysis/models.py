@@ -56,6 +56,14 @@ def insert_stock_news(data):
             continue
 
 
+# # one year date list
+# import datetime
 
-#data = get_stock_news('삼성전자', 1)
-# insert_stock_news2(data)
+# start_date = datetime.date(2023, 2, 21)
+# end_date = datetime.date(2023, 3, 10)
+# delta = datetime.timedelta(days=1)
+# dates = [str(start_date + i*delta) for i in range((end_date - start_date).days + 1)]
+
+# for date in dates:
+#     data = get_main_news(date)
+#     insert_main_news(data)

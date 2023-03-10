@@ -4,7 +4,7 @@ from .models import StockNews, MainNews
 def home(request):
 
     
-    main_news = StockNews.objects.all()
+    main_news = MainNews.objects.all()
     context = {'main_news': main_news}
     return render(request, 'analysis/home.html', context)
 
