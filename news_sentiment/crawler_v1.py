@@ -13,18 +13,53 @@ import json
 from django.core.exceptions import ImproperlyConfigured
 
 
+# crawling main finance news
+def get_main_news(date):
+    # 날짜 설정
+    date = '2023-03-10'
+    # 크롤링할 URL 설정
+    url = f'https://finance.naver.com/news/mainnews.naver?date={date}'
+    # User-Agent 설정
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+    }
+    # 페이지 요청
+    res = requests.get(url, headers=headers)
+    res.raise_for_status()
+    # BeautifulSoup 객체 생성
+    soup = BeautifulSoup(res.text, 'html.parser')
+    #print(soup)
+    # 뉴스 기사 리스트 추출
+    news_list = soup.select('dd.articleSubject')
+    # 뉴스 기사 크롤링
+    for news in news_list:
+        # 뉴스 제목 추출
+        title = news.select_one('a').text
 
-# 다른 뉴스 링크.
-# https://finance.naver.com/item/news_news.nhn?code=005930&page=1
-# ---------------------
+        # 뉴스 링크 추출
+        link = news.select_one('a')['href']
+        link = "https://finance.naver.com" + link 
+        # 뉴스 내용 추출
+        content_res = requests.get(link, headers=headers)
+        content_res.raise_for_status()
+        content_soup = BeautifulSoup(content_res.text, 'html.parser')
+        content = content_soup.select_one('div#content').text.strip()
+        
+        # 결과 출력
+        print('제목:', title)
+        print('링크:', link)
+        print('내용:', content)
+        print()
 
 
-# get news data.
+
+# get stock news data.
 # name: company name
 # max_page: max page number
 # return: list of news data
 # data = [
 #     {
+#         'company': 'company',
 #         'subject': 'subject',
 #         'date': 'date',
 #         'summary': 'summary',
@@ -34,7 +69,7 @@ from django.core.exceptions import ImproperlyConfigured
 #     ...
 # ]
 # usage: data = get_news('삼성전자', 10)
-def get_news(name,max_page):
+def get_stock_news(name,max_page):
 
     data = []
     for page in range(1,max_page + 1):
@@ -57,6 +92,7 @@ def get_news(name,max_page):
             if m is not None:
                 date = m.group(0)
             item = {
+                'company': name,
                 'subject': subject,
                 'date': date,
                 'summary': summary,
@@ -72,6 +108,8 @@ def get_news(name,max_page):
                 elem_content_extra.decompose()
             data[i]['content'] = elem_content.text.strip()
     return data
+
+
 
 
 
@@ -91,24 +129,25 @@ def get_secret(setting, secrets=secrets):
         error_msg = "Set the {} environment variable".format(setting)
         raise ImproperlyConfigured(error_msg)
 
-DB_HOST = get_secret("DB_HOST")
-DB_DATABASE_NEWS = get_secret("DB_DATABASE_NEWS")
-DB_USER = get_secret("DB_USER")
-DB_PASSWORD = get_secret("DB_PASSWORD")
+
+DB_HOST = get_secret("DB_HOST") # database host
+DB_DATABASE_NEWS = get_secret("DB_DATABASE_NEWS") # news database
+DB_USER = get_secret("DB_USER") # database user
+DB_PASSWORD = get_secret("DB_PASSWORD") # database password
 
 
 # set logging level to debug
 #logging.basicConfig(level=logging.DEBUG)
 
-def insert_news_data(data):
+def insert_stock_news(data):
     conn = psycopg2.connect(host=DB_HOST, database=DB_DATABASE_NEWS, user=DB_USER, password=DB_PASSWORD)
     cur = conn.cursor()
     for item in data:
-        cur.execute("INSERT INTO news (subject, date, summary, content, url) VALUES (%s, %s, %s, %s, %s)", (item['subject'], item['date'], item['summary'], item['content'], item['url']))
+        cur.execute("INSERT INTO stock_news (company, subject, date, summary, content, url) VALUES (%s, %s, %s, %s, %s, %s)", (item['company'] ,item['subject'], item['date'], item['summary'], item['content'], item['url']))
     conn.commit()
     cur.close()
     conn.close()
 
 
-data = get_news('삼성전자', 1)
-insert_news_data(data)
+data = get_stock_news('에코프로비엠', 1)
+insert_stock_news(data)
