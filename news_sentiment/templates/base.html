@@ -20,7 +20,7 @@
   <nav class="py-2 bg-light border-bottom">
     <div class="container d-flex flex-wrap">
       <ul class="nav me-auto">
-        <li class="nav-item"><a href="/" class="nav-link link-dark px-2 active" aria-current="page">EmoNews</a></li>
+        <li class="nav-item"><a href="{% url 'analysis:home' %}" class="nav-link link-dark px-2 active" aria-current="page">EmoNews</a></li>
         <li class="nav-item"><a href="" class="nav-link link-dark px-2">감성 분석</a></li>
         <li class="nav-item"><a href="" class="nav-link link-dark px-2">커뮤니티</a></li>
         <li class="nav-item"><a href="" class="nav-link link-dark px-2">Q&A</a></li>
@@ -28,11 +28,11 @@
       </ul>
       <ul class="nav">
         {% if user.is_authenticated %}
-        <li class="nav-item"><a href="{% url 'mypage' %}" class="nav-link link-dark px-2">Mypage</a></li>
-        <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link link-dark px-2">Logout</a></li>
+        <li class="nav-item"><a href="{% url 'account:mypage' %}" class="nav-link link-dark px-2">Mypage</a></li>
+        <li class="nav-item"><a href="{% url 'account:logout' %}" class="nav-link link-dark px-2">Logout</a></li>
         {% else %}
-        <li class="nav-item"><a href="{% url 'login' %}" class="nav-link link-dark px-2">Login</a></li>
-        <li class="nav-item"><a href="{% url 'register' %}" class="nav-link link-dark px-2">Sign up</a></li>
+        <li class="nav-item"><a href="{% url 'account:login' %}" class="nav-link link-dark px-2">Login</a></li>
+        <li class="nav-item"><a href="{% url 'account:register' %}" class="nav-link link-dark px-2">Sign up</a></li>
         {% endif %}
       </ul>
     </div>

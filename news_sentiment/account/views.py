@@ -16,7 +16,7 @@ def register(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Registration successful')
-            return redirect('login')
+            return redirect('account:login')
         
         else:
             # print specific error message for user to register and let them know what they did wrong
@@ -39,7 +39,7 @@ def login_view(request): # login view
             user = authenticate(request, email=email, password=password) 
             if user is not None: 
                 login(request, user) 
-                return redirect('home') 
+                return redirect('analysis:home') 
             else: 
                 messages.error(request, 'Invalid email or password') 
     else:
@@ -50,7 +50,7 @@ def login_view(request): # login view
 
 def logout_view(request):
     logout(request)
-    return redirect('login')
+    return redirect('account:login')
 
 
 def mypage(request):
