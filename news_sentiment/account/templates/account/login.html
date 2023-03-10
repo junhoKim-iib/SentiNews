@@ -1,55 +1,99 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block title %}로그인{% endblock %} {% block content
+%}
 
-{% block title %}로그인{% endblock %}
+<div class="modal-dialog" role="document" style="width: 450px">
+  <div class="modal-content rounded-4 shadow">
+    <div class="modal-header p-5 pb-4 border-bottom-0">
+      <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
+      <h1 class="fw-bold mb-0 fs-2">환영해요!</h1>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      ></button>
+      <!--닫기버튼-->
+    </div>
 
-{% block content %}
+    <div class="modal-body p-5 pt-0">
+      <form method="post" class="">
+        {% csrf_token %}
+        <!--보안토큰-->
+        {% include "form_errors.html" %}
+        <!--에러메세지-->
 
-   <div class="modal-dialog" role="document" style="width:450px;">
-    <div class="modal-content rounded-4 shadow">
-      <div class="modal-header p-5 pb-4 border-bottom-0">
-        <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
-        <h1 class="fw-bold mb-0 fs-2">환영해요!</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> <!--닫기버튼-->
-      </div>
+        <div class="form-floating mb-3">
+          <!--이메일-->
+          <input
+            type="email"
+            class="form-control rounded-3"
+            id="{{ form.email.id_for_label }}"
+            placeholder="name@example.com"
+            name="{{ form.email.name }}"
+            value="{{ form.email.value|default:'' }}"
+            required
+          />
+          <label for="{{ form.email.id_for_label }}">Email</label>
+        </div>
+        <div class="form-floating mb-3">
+          <!--비밀번호-->
+          <input
+            type="password"
+            class="form-control rounded-3"
+            id="{{ form.password.id_for_label }}"
+            placeholder="Password"
+            name="{{ form.password.name }}"
+            value="{{ form.password.value|default_if_none:'' }}"
+            required
+          />
+          <label for="{{ form.password.id_for_label }}">비밀번호</label>
+        </div>
 
-      <div class="modal-body p-5 pt-0">
-        <form method="post" class="">
-            {% csrf_token %} <!--보안토큰-->
-            {% include "form_errors.html" %} <!--에러메세지-->
+        <button
+          class="w-100 mb-2 btn btn-lg rounded-3 btn-primary"
+          type="submit"
+        >
+          Sign in
+        </button>
+        <p>
+          아직 회원이 아니라면
+          <a href="{% url 'register' %}">회원가입</a>하세요.
+        </p>
 
+        <!-- 로그인 타플랫폼 연동 -->
+        <hr class="my-4" />
 
-          <div class="form-floating mb-3"> <!--이메일-->
-            <input type="email" class="form-control rounded-3" id="{{ form.email.id_for_label }}" placeholder="name@example.com" name="{{ form.email.name }}" value="{{ form.email.value|default:'' }}" required>
-            <label for="{{ form.email.id_for_label }}">Email</label>
-          </div>
-          <div class="form-floating mb-3"> <!--비밀번호-->
-            <input type="password" class="form-control rounded-3" id="{{ form.password.id_for_label }}" placeholder="Password" name="{{ form.password.name }}" value="{{ form.password.value|default_if_none:'' }}"required>
-            <label for="{{ form.password.id_for_label }}">비밀번호</label>
-          </div>
-        
-           
-          <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Sign in</button>
-            <p>아직 회원이 아니라면 <a href="{% url 'register' %}">회원가입</a>하세요.</p>
-
-
-          <!-- 로그인 타플랫폼 연동 -->
-          <hr class="my-4">
-          
-          <h2 class="fs-5 fw-bold mb-3">Or use a third-party</h2>
-          <button class="w-100 py-2 mb-2 btn btn-outline-dark rounded-3" type="submit">
-            <svg class="bi me-1" width="16" height="16"><use xlink:href="#twitter"></use></svg>
-            Sign in with Twitter
-          </button>
-          <button class="w-100 py-2 mb-2 btn btn-outline-primary rounded-3" type="submit">
-            <svg class="bi me-1" width="16" height="16"><use xlink:href="#facebook"></use></svg>
-            Sign in with Facebook
-          </button>
-          <button class="w-100 py-2 mb-2 btn btn-outline-secondary rounded-3" type="submit">
-            <svg class="bi me-1" width="16" height="16"><use xlink:href="#github"></use></svg>
-            Sign in with GitHub
-          </button>
-        </form>
-      </div>
+        <h2 class="fs-5 fw-bold mb-3">Or use a third-party</h2>
+        <button
+          class="w-100 py-2 mb-2 btn btn-outline-dark rounded-3"
+          type="submit"
+        >
+          <svg class="bi me-1" width="16" height="16">
+            <use xlink:href="#twitter"></use>
+          </svg>
+          Sign in with Twitter
+        </button>
+        <button
+          class="w-100 py-2 mb-2 btn btn-outline-primary rounded-3"
+          type="submit"
+        >
+          <svg class="bi me-1" width="16" height="16">
+            <use xlink:href="#facebook"></use>
+          </svg>
+          Sign in with Facebook
+        </button>
+        <button
+          class="w-100 py-2 mb-2 btn btn-outline-secondary rounded-3"
+          type="submit"
+        >
+          <svg class="bi me-1" width="16" height="16">
+            <use xlink:href="#github"></use>
+          </svg>
+          Sign in with GitHub
+        </button>
+      </form>
     </div>
   </div>
+</div>
+
 {% endblock %}

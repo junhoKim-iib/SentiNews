@@ -1,5 +1,17 @@
-{%extends "base.html"%}
+{%extends "base.html"%} {%block content%}
+<!-- create search bar with bootstrap and use icon-->
+<form class="mt-4" style="width: 15%">
+  <div
+    class="input-group input-group-sm d-grid gap-2 d-md-flex justify-content-end"
+  >
+    <input type="text" class="form-control" placeholder="종목 검색" />
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="submit">
+        <span class="bi bi-search"></span>
+      </button>
+    </div>
+  </div>
+</form>
+<!-- create news analysis view-->
 
-{%block content%}
-home view
 {%endblock%}
