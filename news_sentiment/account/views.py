@@ -50,7 +50,7 @@ def login_view(request): # login view
 
 def logout_view(request):
     logout(request)
-    return redirect('account/login.html')
+    return redirect('login')
 
 
 def mypage(request):
