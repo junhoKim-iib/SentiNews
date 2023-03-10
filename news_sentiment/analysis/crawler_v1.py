@@ -4,14 +4,6 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-# import for database
-import psycopg2
-import logging
-
- # import for json
-import json
-from django.core.exceptions import ImproperlyConfigured
-
 
 # crawling main finance news
 def get_main_news(date):
@@ -46,7 +38,7 @@ def get_main_news(date):
         content_soup = BeautifulSoup(content_res.text, 'html.parser')
         content = content_soup.select_one('div#content').text.strip()
         
-        item = {'title': title, 'link': link, 'content': content}
+        item = {'subject': title, 'url': link, 'content': content, 'date': date}
         # 결과 출력
         data.append(item)
 
@@ -111,44 +103,5 @@ def get_stock_news(name,max_page):
 
 
 
-
-
-# insert data to database
-# read secrets.json file and connect to database
-
-
-# read secrets.json to get database connection info
-
-with open("news_sentiment\secrets.json") as f:
-    secrets = json.loads(f.read())
-
-def get_secret(setting, secrets=secrets):
-    try:
-        return secrets[setting]
-    except KeyError:
-        error_msg = "Set the {} environment variable".format(setting)
-        raise ImproperlyConfigured(error_msg)
-
-
-DB_HOST = get_secret("DB_HOST") # database host
-DB_DATABASE_NEWS = get_secret("DB_DATABASE_NEWS") # news database
-DB_USER = get_secret("DB_USER") # database user
-DB_PASSWORD = get_secret("DB_PASSWORD") # database password
-
-
 # set logging level to debug
 #logging.basicConfig(level=logging.DEBUG)
-
-def insert_stock_news(data):
-    conn = psycopg2.connect(host=DB_HOST, database=DB_DATABASE_NEWS, user=DB_USER, password=DB_PASSWORD)
-    cur = conn.cursor()
-    for item in data:
-        cur.execute("INSERT INTO stock_news (company, subject, date, summary, content, url) VALUES (%s, %s, %s, %s, %s, %s)", (item['company'] ,item['subject'], item['date'], item['summary'], item['content'], item['url']))
-    conn.commit()
-    cur.close()
-    conn.close()
-
-
-# usage:
-# data = get_stock_news('에코프로비엠', 1)
-# insert_stock_news(data)

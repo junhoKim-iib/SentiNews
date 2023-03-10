@@ -1,43 +1,61 @@
 from django.db import models
-# import for database
-import psycopg2
 import logging
 
- # import for json
-import os, json
 from django.core.exceptions import ImproperlyConfigured
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
-# Create your models here.
-with open(os.path.join(BASE_DIR, 'secrets.json')) as f:
-    secrets = json.loads(f.read())
-
-def get_secret(setting, secrets=secrets):
-    try:
-        return secrets[setting]
-    except KeyError:
-        error_msg = "Set the {} environment variable".format(setting)
-        raise ImproperlyConfigured(error_msg)
-
-
-DB_HOST = get_secret("DB_HOST") # database host
-DB_DATABASE_NEWS = get_secret("DB_DATABASE_NEWS") # news database
-DB_USER = get_secret("DB_USER") # database user
-DB_PASSWORD = get_secret("DB_PASSWORD") # database password
-
+# import for crawling function 
+from .crawler_v1 import get_main_news, get_stock_news
+from django.db import IntegrityError
 
 # set logging level to debug
 #logging.basicConfig(level=logging.DEBUG)
 
-def insert_stock_news(data):
-    conn = psycopg2.connect(host=DB_HOST, database=DB_DATABASE_NEWS, user=DB_USER, password=DB_PASSWORD)
-    cur = conn.cursor()
+
+class StockNews(models.Model):
+    subject = models.CharField(max_length=256)
+    company = models.CharField(max_length=255)
+    date = models.DateField()
+    summary = models.TextField()
+    content = models.TextField()
+    url = models.URLField(unique=True)
+
+    class Meta:
+        db_table = 'stock_news'
+
+
+class MainNews(models.Model):
+    subject = models.CharField(max_length=256)
+    date = models.DateField()
+    content = models.TextField()
+    url = models.URLField(unique=True)
+
+    class Meta:
+        db_table = 'main_news'
+
+
+
+def insert_main_news(data):
     for item in data:
-        cur.execute("INSERT INTO stock_news (company, subject, date, summary, content, url) VALUES (%s, %s, %s, %s, %s, %s)", (item['company'] ,item['subject'], item['date'], item['summary'], item['content'], item['url']))
-    conn.commit()
-    cur.close()
-    conn.close()
+        try:
+            obj = MainNews(subject=item['subject'], date=item['date'], content=item['content'], url=item['url'])
+            obj.save()
+
+        except IntegrityError:
+            # 이미 저장된 뉴스인 경우 스킵
+            continue
 
 
+def insert_stock_news(data):
+    for item in data:
+        try:
+            obj = StockNews(company=item['company'], subject=item['subject'], date=item['date'], summary=item['summary'], content=item['content'], url=item['url'])
+            obj.save()
+
+        except IntegrityError:
+            # 이미 저장된 뉴스인 경우 스킵
+            continue
+
+
+
+#data = get_stock_news('삼성전자', 1)
+# insert_stock_news2(data)

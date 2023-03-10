@@ -9,5 +9,6 @@ app_name = 'analysis'
 urlpatterns = [
 
     path('', views.home, name='home'),
+    path('stocks/', views.stocks, name='stocks'),
 
 ]
