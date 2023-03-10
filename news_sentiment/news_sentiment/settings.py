@@ -92,6 +92,8 @@ DB_HOST = get_secret("DB_HOST")
 DB_DATABASE_ACCOUNT = get_secret("DB_DATABASE_ACCOUNT")
 DB_USER = get_secret("DB_USER")
 DB_PASSWORD = get_secret("DB_PASSWORD")
+DB_DATABASE_NEWS = get_secret("DB_DATABASE_NEWS")
+
 
 DATABASES = {
     'default': {
@@ -101,7 +103,18 @@ DATABASES = {
         'PASSWORD': DB_PASSWORD,
         'HOST': DB_HOST,
         'PORT': '5432',
-    }
+    },
+    
+    'news': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': DB_DATABASE_NEWS,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': DB_HOST,
+        'PORT': '5432',
+    },
+
+
 }
 AUTH_USER_MODEL = 'account.User' # 커스텀 모델 사용시 추가 필요
 
