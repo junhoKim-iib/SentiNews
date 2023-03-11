@@ -39,7 +39,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for news in page_obj %}
+        {% for news in negative_news %}
         <tr>
           <th scope="row">{{ forloop.counter }}</th>
           <td><a href="{{ news.url }}">{{ news.subject }}</a></td>
