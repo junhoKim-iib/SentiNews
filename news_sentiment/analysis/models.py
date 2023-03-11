@@ -68,5 +68,5 @@ def insert_stock_news(data):
 #     data = get_main_news(date)
 #     insert_main_news(data)
 
-# data = get_main_news('2021-03-11')
-# insert_main_news(data)
+data = get_main_news('2021-03-11')
+insert_main_news(data)
