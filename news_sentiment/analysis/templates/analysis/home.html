@@ -28,32 +28,31 @@
     </div>
 
     <div class="row mt-3">
-        <div class="col-12">
-            <h3>News List</h3>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for news in main_news %}
-                        <tr>
-                            <th scope="row">{{ forloop.counter }}</th>
-                            <td><a href="{{ news.url }}">{{ news.subject }}</a></td>
-                            <td>{{ news.date }}</td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="3">No news for the selected date.</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+  <div class="col-12">
+    <h3>News List</h3>
+    <table class="table" style="width:50%">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Title</th>
+          <th scope="col">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for news in page_obj %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td><a href="{{ news.url }}">{{ news.subject }}</a></td>
+          <td>{{ news.date }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3">No news for the selected date.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 
+    
 
 {%endblock%}

@@ -4,7 +4,7 @@ import logging
 from django.core.exceptions import ImproperlyConfigured
 
 # import for crawling function 
-from .crawler_v1 import get_main_news, get_stock_news
+from .crawler_v1 import get_main_news
 from django.db import IntegrityError
 
 # set logging level to debug
@@ -67,3 +67,6 @@ def insert_stock_news(data):
 # for date in dates:
 #     data = get_main_news(date)
 #     insert_main_news(data)
+
+# data = get_main_news('2021-03-11')
+# insert_main_news(data)
