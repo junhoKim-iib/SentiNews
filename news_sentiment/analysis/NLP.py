@@ -76,13 +76,15 @@ def news_analysis(news_model, analysis_model):
     for news in news_list:
         content = news.content
         sentence_tokens = nltk.sent_tokenize(content)
-        sentence_tokens.extend([news.subject] * (int(len(sentence_tokens)* 0.15)))
+        sentence_tokens.extend([news.subject] * (int(len(sentence_tokens)* 0.2)))
         input = convert_data(sentence_tokens)
 
         #input.extend([title_input] * int(len(content_split_by_sentence) * 0.2)) # 제목 문장 추가. 제목의 가중치는 20%
         predicted_value = bert_model.predict(input)
         predicted_label = np.argmax(predicted_value, axis=1) # 예측된 라벨
         major_sentiment = np.bincount(predicted_label).argmax() # 예측된 라벨 중 가장 많은 라벨
+
+
         if major_sentiment == 0:
             obj = analysis_model(news = news, sentiment = 0)
 
