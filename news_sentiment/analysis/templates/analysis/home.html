@@ -47,12 +47,20 @@
 <!-- create news word cloud view-->
 <div class="row mt-3">
   <div class="col-md-6">
-    <h3>Word Cloud</h3>
+    <h3>Top keywords</h3>
     <!-- Insert code for dynamic word cloud here -->
+    {% for word in week_keywords %}
+    <p> {{ word }} </p>
+    {% endfor %}
+
+
   </div>
+
+
+
   <div class="col-md-6">
     <h3>Sentiment Analysis</h3>
-    <div class="chart-container" style="position: relative; height:40vh; width:80vw;">
+    <div class="chart-container col-md-5">
     <!-- Insert code for dynamic pie chart here -->
       <canvas id="myChart"></canvas>
     </div>
@@ -78,44 +86,33 @@
                   'rgba(75, 192, 192, 1)',
                   'rgba(255, 99, 132, 1)',
                   'rgba(255, 206, 86, 1)',
-              ],
+                ],
               borderWidth: 1
-          }]
-      },
-      options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero: true
-                  }
-              }]
-          }
-      }
-  });
-</script>
+            }]
+          },
+        options: {
+          
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+        </script>
+
+  </div>
+  
 
   </div>
 </div>
 
 
 
-<!---->
-<!-- Add Chart.js library -->
-
-<div class="col-md-6">
-  <h3>Sentiment Analysis</h3>
-  <!-- Add canvas for chart -->
-
-</div>
-
-<!-- Add JavaScript code to create chart -->
-
-
-
-
-<!-- test code end-->
 
 <!-- create news list -->
 <div class="row mt-3">
@@ -124,7 +121,7 @@
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">Title</th>
+          <th scope="col">Positive</th>
           <th scope="col">Date</th>
         </tr>
       </thead>
@@ -132,7 +129,7 @@
         {% for news in main_positive %}
         <tr>
           <th scope="row">{{ forloop.counter }}</th>
-          <td>{{ news.subject }}</td>
+          <td><a href={{news.url}}>{{ news.subject }}<a></td>
           <td>{{ news.date }}</td>
         </tr>
         {% empty %}
@@ -148,7 +145,7 @@
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">Title</th>
+          <th scope="col">Negative</th>
           <th scope="col">Date</th>
         </tr>
       </thead>
@@ -156,7 +153,7 @@
         {% for news in main_negative %}
         <tr>
           <th scope="row">{{ forloop.counter }}</th>
-          <td>{{ news.subject }}</td>
+          <td><a href={{news.url}}>{{ news.subject }}</a></td>
           <td>{{ news.date }}</td>
         </tr>
         {% empty %}

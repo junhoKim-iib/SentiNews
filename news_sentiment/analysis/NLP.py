@@ -1,3 +1,6 @@
+from keybert import KeyBERT
+from konlpy.tag import Okt
+
 import os
 import pandas as pd
 import numpy as np
@@ -16,7 +19,7 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
                             roc_auc_score, confusion_matrix, classification_report, \
                             matthews_corrcoef, cohen_kappa_score, log_loss
 
-
+# import transformers
 
 # X_data 는 뉴스 내용을 문장 단위로 쪼개서 저장한 문자열 리스트
 def convert_data(X_data):
@@ -104,4 +107,55 @@ def news_analysis(news_model, analysis_model):
 
 
 
+def main_keywords(obj_list):
+    key_model = KeyBERT('paraphrase-multilingual-MiniLM-L12-v2')
+
+
+    total_title = ""
+    for obj in obj_list:
+        total_title += obj.subject + " "
+
+    # 입력 문장 전처리
+    input_text = obj.content
+    okt = Okt()
+    input_tokens = okt.nouns(total_title)
+    input_text = ' '.join(input_tokens) # 리스트를 문자열로 합치기
+    keywords = key_model.extract_keywords(input_text, keyphrase_ngram_range=(1,1), top_n=20, nr_candidates=20, use_maxsum=True)
+    
+    print("keywords: ", keywords)
+  
+    return keywords
+
+
+
 # test
+# def main_keywords(obj_list):
+#     model_name = 'bert-base-multilingual-cased'
+#     tokenizer = transformers.BertTokenizer.from_pretrained(model_name, unk_token="[UNK]")
+#     model = transformers.TFBertModel.from_pretrained(model_name)
+#     res = []
+#     for obj in obj_list:
+#     # 입력 문장 전처리
+#         input_text = obj.content
+
+#         input_tokens = tokenizer.encode(input_text, add_special_tokens=True, max_length=128, truncation=True, padding='max_length', return_tensors='tf')
+
+
+#         # 추론 수행
+#         outputs = model(input_tokens)
+#         pooled_output = outputs[1]  # 두번째 값이 pooled_output
+
+#         # 예측된 토큰의 확률 분포에서 상위 N개 토큰 추출
+#         N = 3  # 추출할 키워드 개수
+#         token_probs = tf.nn.softmax(pooled_output, axis=-1)[0]
+#         top_n_tokens = tf.argsort(token_probs, direction='DESCENDING')[:N]
+
+#         # 추출된 토큰을 텍스트로 변환
+#         #keywords = [tokenizer.decode([i]) for i in top_n_tokens.numpy()]
+#         keywords = [tokenizer.decode([i], clean_up_tokenization_spaces=True, fallback_token="<UNK>") for i in top_n_tokens.numpy()]
+
+#         print("keywords: ", keywords)
+#         res.extend(keywords)
+
+#     res = list(set(res))
+#     return res
