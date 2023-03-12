@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import numpy as np
+import nltk
 import re
 from tqdm import tqdm
 import urllib.request
@@ -17,9 +18,9 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 
 
 
-
+# X_data 는 뉴스 내용을 문장 단위로 쪼개서 저장한 문자열 리스트
 def convert_data(X_data):
-
+    
     MODEL_NAME = "klue/bert-base"
     # model = TFBertForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=3, from_pt=True)
     tokenizer = BertTokenizer.from_pretrained(MODEL_NAME)
@@ -60,8 +61,8 @@ def convert_data(X_data):
 
 
 
-def main_news_analysis(news_model, analysis_model):
-
+def news_analysis(news_model, analysis_model):
+    obj_list = []
     model_path = 'best_model.h5'
     MODEL_NAME = "klue/bert-base"
     tokenizer = BertTokenizer.from_pretrained(MODEL_NAME)
@@ -69,20 +70,19 @@ def main_news_analysis(news_model, analysis_model):
     bert_model = tf.keras.models.load_model(model_path, custom_objects={'TFBertForSequenceClassification': TFBertForSequenceClassification})
      
     #news_list = db_model.objects.all()
-    news_list = news_model.objects.filter(date='2023-03-11')
+    #news_list = news_model.objects.filter(date__year='2023')
+    news_list = news_model.objects.all()[:10]
 
     for news in news_list:
-        #title_input = convert_data(news.subject)
         content = news.content
-        content_split_by_sentence = content.split('.')
-        content_split_by_sentence.extend([news.subject] * int(len(content_split_by_sentence) * 0.2)) # 제목 문장 추가. 제목의 가중치는 20%
-        input = convert_data(content_split_by_sentence) # 뉴스 본문 문장들을 입력 데이터로 변환
+        sentence_tokens = nltk.sent_tokenize(content)
+        sentence_tokens.extend([news.subject] * (int(len(sentence_tokens)* 0.15)))
+        input = convert_data(sentence_tokens)
 
         #input.extend([title_input] * int(len(content_split_by_sentence) * 0.2)) # 제목 문장 추가. 제목의 가중치는 20%
         predicted_value = bert_model.predict(input)
-
-        major_sentiment = np.argmax(predicted_value) # 예측된 감성 중 가장 큰 값을 가진 인덱스를 가져옴
-
+        predicted_label = np.argmax(predicted_value, axis=1) # 예측된 라벨
+        major_sentiment = np.bincount(predicted_label).argmax() # 예측된 라벨 중 가장 많은 라벨
         if major_sentiment == 0:
             obj = analysis_model(news = news, sentiment = 0)
 
@@ -92,8 +92,14 @@ def main_news_analysis(news_model, analysis_model):
         else:
             obj = analysis_model(news = news, sentiment = 2)
 
-        obj.save()
+        obj_list.append(obj)
+
+        print(news.subject ,obj.sentiment)
+        print(news.url)
+        print(predicted_label)
+
+    return obj_list
 
 
 
-
+# test
