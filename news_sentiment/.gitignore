@@ -12,3 +12,5 @@ db.sqlite3-journal
 media
 secrets.json
 best_model.h5
+news/
+
