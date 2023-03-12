@@ -9,7 +9,7 @@ from django.db import IntegrityError
 
 
 # analysis 
-from .NLP import main_news_analysis
+from .NLP import news_analysis
 
 # set logging level to debug
 #logging.basicConfig(level=logging.DEBUG)
@@ -46,6 +46,13 @@ class MainSentiment(models.Model):
         db_table = 'main_sentiment'
 
 
+class StockSentiment(models.Model):
+    # connect to stock_news table by url
+    news = models.OneToOneField(StockNews, on_delete=models.CASCADE)
+    sentiment = models.IntegerField()
+
+    class Meta:
+        db_table = 'stock_sentiment'
 
 
 
@@ -79,6 +86,35 @@ def insert_stock_news(data):
             continue
 
 
+def insert_main_sentiment():
+    obj_list = news_analysis(MainNews, MainSentiment)
+    for obj in obj_list:
+        try:
+            obj.save()
+
+        except IntegrityError:
+            print('IntegrityError')
+            # 이미 저장된 뉴스인 경우 스킵
+            continue
+
+
+def insert_stock_sentiment():
+    obj_list = news_analysis(StockNews, StockSentiment)
+    for obj in obj_list:
+        try:
+            obj.save()
+
+        except IntegrityError:
+            # 이미 저장된 뉴스인 경우 스킵
+            continue
+
+
+
+insert_main_sentiment()
+
+
+
+
 
 
 
@@ -101,4 +137,19 @@ def insert_stock_news(data):
 
 
 # get sentiment score of today's main news
-#main_news_analysis(MainNews, MainSentiment)
+
+
+
+
+# import pandas as pd 
+# import nltk
+# test_list = MainNews.objects.all()[:1]
+# for news in test_list:
+#     content = news.content
+#     sentence_tokens = nltk.sent_tokenize(content)
+#     sentence_tokens.extend([news.subject] * (int(len(sentence_tokens)* 0.15)))
+#     print(int(len(sentence_tokens)* 0.2))
+#     for sentence in sentence_tokens:
+#         print(sentence)
+
+

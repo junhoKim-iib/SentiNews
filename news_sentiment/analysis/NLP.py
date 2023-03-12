@@ -69,9 +69,9 @@ def news_analysis(news_model, analysis_model):
 
     bert_model = tf.keras.models.load_model(model_path, custom_objects={'TFBertForSequenceClassification': TFBertForSequenceClassification})
      
-    #news_list = db_model.objects.all()
-    #news_list = news_model.objects.filter(date__year='2023')
-    news_list = news_model.objects.all()[:10]
+    news_list = news_model.objects.all()
+    #news_list = news_model.objects.filter(date__year='2023', date__month='3', date__day='10') # 테스트용
+    #news_list = news_model.objects.all()[:10]# 뉴스 10개만 테스트
 
     for news in news_list:
         content = news.content
