@@ -110,13 +110,7 @@ def insert_stock_sentiment():
 
 
 
-insert_main_sentiment()
-
-
-
-
-
-
+#insert_main_sentiment()
 
 # # one year date list
 # import datetime

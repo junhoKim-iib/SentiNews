@@ -1,36 +1,126 @@
-{%extends "base.html"%} {%block content%}
+{%extends "base.html"%} 
+
+{% block title %}News{% endblock %}
+
+{% block content %}
+
 <!-- create search bar with bootstrap and use icon-->
-<form action="" method="get" class="mt-4" style="width: 15%">
-  <div
-    class="input-group input-group-sm d-grid gap-2 d-md-flex justify-content-end"
-  >
-    <input type="text" class="form-control" placeholder="종목 검색" />
-    <div class="input-group-append">
-      <button class="btn btn-outline-secondary" type="submit">
-        <span class="bi bi-search"></span>
-      </button>
-    </div>
+
+
+<div class="row mt-3">
+  <div class="col-md-2">
+    <form action="" method="get" class="d-flex justify-content-start">
+      <div class="input-group input-group-sm">
+        <input type="text" class="form-control" placeholder="종목 검색" />
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="submit">
+            <span class="bi bi-search"></span>
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
-</form>
+
+
+  <div class="col-md-3 d-flex justify-content-end">
+    <form action="" method="get" class="input-group input-group-sm">
+     <div class="d-flex align-items-center">
+        <div class="input-group input-group-sm me-2">
+          <span class="input-group-text">Start Date:</span>
+          <input type="date" class="form-control" name="start_date" value="{{ start_date }}">
+        </div>
+        <div class="input-group input-group-sm me-2">
+          <span class="input-group-text">End Date:</span>
+          <input type="date" class="form-control" name="end_date" value="{{ end_date }}">
+          <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+
+
 
 <!-- create news word cloud view-->
-
-    <div class="row mt-3">
-        <div class="col-3">
-            <form method="get">
-                <div class="form-group">
-                    <label for="date-picker">Select a date:</label>
-                    <input type="date" class="form-control" id="date-picker" name="date" value="{{ date }}">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </div>
-            </form>
-        </div>
+<div class="row mt-3">
+  <div class="col-md-6">
+    <h3>Word Cloud</h3>
+    <!-- Insert code for dynamic word cloud here -->
+  </div>
+  <div class="col-md-6">
+    <h3>Sentiment Analysis</h3>
+    <div class="chart-container" style="position: relative; height:40vh; width:80vw;">
+    <!-- Insert code for dynamic pie chart here -->
+      <canvas id="myChart"></canvas>
     </div>
+  <script>
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+          labels: ['Positive', 'Negative', 'Neutral'],
+          datasets: [{
+              label: '# news',
+              data: [
+                {{ positive_count }},
+                {{ negative_count }},
+                {{ neutral_count }},
+              ],
+              backgroundColor: [
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+              ],
+              borderColor: [
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(255, 206, 86, 1)',
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          }
+      }
+  });
+</script>
 
-    <div class="row mt-3">
-  <div class="col-12">
-    <h3>News List</h3>
-    <table class="table" style="width:50%">
+  </div>
+</div>
+
+
+
+<!---->
+<!-- Add Chart.js library -->
+
+<div class="col-md-6">
+  <h3>Sentiment Analysis</h3>
+  <!-- Add canvas for chart -->
+
+</div>
+
+<!-- Add JavaScript code to create chart -->
+
+
+
+
+<!-- test code end-->
+
+<!-- create news list -->
+<div class="row mt-3">
+  <div class="col">
+    <table class="table">
       <thead>
         <tr>
           <th scope="col">#</th>
@@ -39,21 +129,43 @@
         </tr>
       </thead>
       <tbody>
-        {% for news in negative_news %}
+        {% for news in main_positive %}
         <tr>
           <th scope="row">{{ forloop.counter }}</th>
-          <td><a href="{{ news.url }}">{{ news.subject }}</a></td>
-          
+          <td>{{ news.subject }}</td>
           <td>{{ news.date }}</td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="3">No news for the selected date.</td>
+          <td colspan="3">No news for the selected date range.</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-
-    
-
-{%endblock%}
+  </div>
+  <div class="col">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Title</th>
+          <th scope="col">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for news in main_negative %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ news.subject }}</td>
+          <td>{{ news.date }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3">No news for the selected date range.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
