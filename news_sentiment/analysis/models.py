@@ -87,7 +87,7 @@ def insert_stock_news(data):
 
 
 def insert_main_sentiment():
-    obj_list = news_analysis(MainNews, MainSentiment)
+    obj_list = news_analysis(MainNews, MainSentiment)# 기간 설정은 함수 내부에서 설정
     for obj in obj_list:
         try:
             obj.save()
@@ -112,6 +112,7 @@ def insert_stock_sentiment():
 
 #insert_main_sentiment()
 
+news_analysis(MainNews, MainSentiment)
 
 
 

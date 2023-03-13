@@ -8,6 +8,8 @@
 
 
 <div class="row mt-3">
+
+  <!-- 미개발 기능 
   <div class="col-md-2">
     <form action="" method="get" class="d-flex justify-content-start">
       <div class="input-group input-group-sm">
@@ -20,6 +22,7 @@
       </div>
     </form>
   </div>
+    -->
 
 
   <div class="col-md-3 d-flex justify-content-end">
@@ -45,22 +48,17 @@
 
 
 <!-- create news word cloud view-->
-<div class="row mt-3">
+<div class="row mt-4">
   <div class="col-md-6">
     <h3>Top keywords</h3>
     <!-- Insert code for dynamic word cloud here -->
-    {% for word in week_keywords %}
-    <p> {{ word }} </p>
-    {% endfor %}
-
-
+    <img style="max-width: 100%; height: auto;" src="data:image/png;base64,{{ word_cloud }}" alt="WordCloud">
   </div>
 
-
-
+<!-- create news sentiment analysis view-->
   <div class="col-md-6">
     <h3>Sentiment Analysis</h3>
-    <div class="chart-container col-md-5">
+    <div class="chart-container col-md-6 h-5">
     <!-- Insert code for dynamic pie chart here -->
       <canvas id="myChart"></canvas>
     </div>
@@ -165,4 +163,6 @@
     </table>
   </div>
 </div>
+
+
 {% endblock %}
