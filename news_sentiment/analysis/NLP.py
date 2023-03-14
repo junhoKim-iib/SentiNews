@@ -1,6 +1,6 @@
 from keybert import KeyBERT
 from konlpy.tag import Okt
-from wordcloud import WordCloud, STOPWORDS
+from wordcloud import WordCloud
 from io import BytesIO
 import base64
 from konlpy.corpus import kolaw
@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import tensorflow_addons as tfa
 from transformers import BertTokenizer, TFBertForSequenceClassification
-
+from django.db import IntegrityError
 # import transformers
 
 # X_data 는 뉴스 내용을 문장 단위로 쪼개서 저장한 문자열 리스트
@@ -58,7 +58,7 @@ def convert_data(X_data):
 
 # 뉴스 모델과 저장할 감성 모델을 인자로 받음
 # 
-def news_analysis(news_model, analysis_model):
+def news_analysis(news_model, analysis_model, news_list):
     obj_list = []
     model_path = 'best_model.h5'
     MODEL_NAME = "klue/bert-base"
@@ -66,11 +66,11 @@ def news_analysis(news_model, analysis_model):
 
     bert_model = tf.keras.models.load_model(model_path, custom_objects={'TFBertForSequenceClassification': TFBertForSequenceClassification})
      
-    news_list = news_model.objects.all()
+    #news_list = news_model.objects.all()
     ## 테스트용
     #news_list = news_model.objects.filter(date__year='2023', date__month='3', date__day='10') # 테스트용
     #news_list = news_model.objects.all()[:10]# 뉴스 10개만 테스트
-
+    i = 0
     for news in news_list:
         content = news.content # 뉴스 내용 불러오기 
         sentence_tokens = nltk.sent_tokenize(content) # 뉴스 내용을 문장 단위로 쪼개서 리스트에 저장
@@ -91,15 +91,24 @@ def news_analysis(news_model, analysis_model):
         else:
             obj = analysis_model(news = news, sentiment = 2)
 
-        obj_list.append(obj) # 뉴스와 감성을 저장할 객체 리스트에 저장
 
-        
+        #obj_list.append(obj) # 뉴스와 감성을 저장할 객체 리스트에 저장
+
+        try:
+            obj.save() # DB에 저장
+
+        except IntegrityError:
+            print("이미 저장된 뉴스입니다.")
+            continue
+
+        i += 1
+        print(i)
+
         # 테스트용
         print(news.subject ,obj.sentiment) 
-        print(news.url)
         print(predicted_label)
 
-    return obj_list 
+    #return obj_list 
 
 
 

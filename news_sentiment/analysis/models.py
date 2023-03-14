@@ -36,10 +36,6 @@ class MainNews(News):
         db_table = 'main_news'
 
 
-
-
-
-
 class MainSentiment(models.Model): 
     # connect to main_news table by url
     news = models.OneToOneField(MainNews, on_delete=models.CASCADE)
