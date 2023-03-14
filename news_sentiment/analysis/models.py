@@ -14,27 +14,30 @@ from .NLP import news_analysis
 # set logging level to debug
 #logging.basicConfig(level=logging.DEBUG)
 
-
-class StockNews(models.Model):
+class News(models.Model):
     subject = models.CharField(max_length=256)
-    company = models.CharField(max_length=255)
     date = models.DateField()
-    summary = models.TextField()
     content = models.TextField()
     url = models.URLField(unique=True)
+
+    class Meta:
+        abstract = True
+
+class StockNews(News):
+    company = models.CharField(max_length=255)
+    summary = models.TextField()
 
     class Meta:
         db_table = 'stock_news'
 
 
-class MainNews(models.Model):
-    subject = models.CharField(max_length=256)
-    date = models.DateField()
-    content = models.TextField()
-    url = models.URLField(unique=True)
-
+class MainNews(News):
     class Meta:
         db_table = 'main_news'
+
+
+
+
 
 
 class MainSentiment(models.Model): 
@@ -112,7 +115,7 @@ def insert_stock_sentiment():
 
 #insert_main_sentiment()
 
-news_analysis(MainNews, MainSentiment)
+
 
 
 
@@ -139,20 +142,6 @@ news_analysis(MainNews, MainSentiment)
 
 
 
-# get sentiment score of today's main news
 
-
-
-
-# import pandas as pd 
-# import nltk
-# test_list = MainNews.objects.all()[:1]
-# for news in test_list:
-#     content = news.content
-#     sentence_tokens = nltk.sent_tokenize(content)
-#     sentence_tokens.extend([news.subject] * (int(len(sentence_tokens)* 0.15)))
-#     print(int(len(sentence_tokens)* 0.2))
-#     for sentence in sentence_tokens:
-#         print(sentence)
 
 
