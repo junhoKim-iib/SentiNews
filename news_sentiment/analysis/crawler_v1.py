@@ -66,7 +66,7 @@ def get_main_news(date):
 #     },
 #     ...
 # ]
-# usage: data = get_news('삼성전자', 10)
+#usage: data = get_news('삼성전자', 10)
 def get_stock_news(name,max_page):
 
     data = []
@@ -85,7 +85,7 @@ def get_stock_news(name,max_page):
         for subject, summary in zip(elems_subject, elems_summary):
             item_url = '{}{}'.format(item_url_prefix, subject.a.get('href'))
             subject = subject.text.strip()
-            m = re.search(r'\d{4}\-\d{2}\-\d{2}', summary)
+            m = re.search(r'\d{4}\-\d{2}\-\d{2}', summary) # 날짜 추출
             date = ''
             if m is not None:
                 date = m.group(0)
@@ -106,5 +106,48 @@ def get_stock_news(name,max_page):
                 elem_content_extra.decompose()
             data[i]['content'] = elem_content.text.strip()
     return data
+
+
+# def get_stock_news(name:str, max_page):
+#     data = []
+#     for page in range(1, max_page + 1):
+#         url = 'https://finance.naver.com/news/news_search.naver?q={q}&page={page}'
+#         q_enc = urllib.parse.quote_plus(name, encoding='euc-kr')
+#         res = requests.get(url.format(q=q_enc, page=page))
+#         soup = BeautifulSoup(res.text, 'lxml')
+#         elem_news = soup.select_one('div.newsSchResult dl.newsList')
+#         elems_subject = elem_news.select('.articleSubject')
+#         elems_summary = elem_news.select('.articleSummary')
+#         elems_summary = [re.sub('\s{2,}', ' ', elem_summary.text.strip()) for elem_summary in elems_summary]
+#         parse_result = urllib.parse.urlparse(url)
+#         item_url_prefix = '{}://{}'.format(parse_result.scheme, parse_result.netloc)
+#         for subject, summary in zip(elems_subject, elems_summary):
+#             item_url = '{}{}'.format(item_url_prefix, subject.a.get('href'))
+#             subject = subject.text.strip()
+#             m = re.search(r'\d{4}\-\d{2}\-\d{2}', summary)
+#             date = ''
+#             if m is not None:
+#                 date = m.group(0)
+#             content = ''
+#             res = requests.get(item_url)
+#             soup = BeautifulSoup(res.text, 'lxml')
+#             elem_content = soup.select_one('#content')
+#             elem_content_extra = elem_content.find('div')
+#             if elem_content_extra:
+#                 elem_content_extra.decompose()
+#             content = elem_content.text.strip()
+#             item = {                  
+#                 'company': name,
+#                 'subject': subject,
+#                 'date': date,
+#                 'summary': summary,
+#                 'url': item_url,
+#                 'content': content
+#             }
+             
+#             data.append(item)
+#     return data
+
+
 
 

@@ -1,3 +1,148 @@
 {% extends 'base.html' %}
 
-individual stock view
+{% block title %}종목별 감성 분석{% endblock %}
+
+{% block content %}
+
+
+  <div class="row mt-3">
+
+  <div class="col-md-2">
+    <form action="" method="GET" class="d-flex justify-content-start">
+      {% csrf_token %}
+      <div class="input-group input-group-sm">
+        <input type="text" name="company" class="form-control" placeholder="종목 검색" value="{{company}}" />
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="submit">
+            <span class="bi bi-search"></span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+
+
+
+<!-- create news word cloud view-->
+<div class="row mt-4">
+  <div class="col-md-6">
+    <h3>Top keywords</h3>
+    <!-- Insert code for dynamic word cloud here -->
+    <img style="max-width: 100%; height: auto;" src="data:image/png;base64,{{ word_cloud }}" alt="WordCloud">
+  </div>
+
+<!-- create news sentiment analysis view-->
+  <div class="col-md-6">
+    <h3>Sentiment Analysis</h3>
+    <div class="chart-container col-md-6 h-5">
+    <!-- Insert code for dynamic pie chart here -->
+      <canvas id="myChart"></canvas>
+    </div>
+  <script>
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+          labels: ['Positive', 'Negative', 'Neutral'],
+          datasets: [{
+              label: '# news',
+              data: [
+                {{ positive_count }},
+                {{ negative_count }},
+                {{ neutral_count }},
+              ],
+              backgroundColor: [
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+              ],
+              borderColor: [
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(255, 206, 86, 1)',
+                ],
+              borderWidth: 1
+            }]
+          },
+        options: {
+          
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+        </script>
+
+  </div>
+  
+
+  </div>
+</div>
+
+
+
+
+<!-- create news list -->
+<div class="row mt-3">
+  <div class="col">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Positive</th>
+          <th scope="col">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for news in stock_positive %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td><a href={{news.url}}>{{ news.subject }}<a></td>
+          <td>{{ news.date }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3">No news for the selected date range.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="col">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Negative</th>
+          <th scope="col">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for news in stock_negative %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td><a href={{news.url}}>{{ news.subject }}</a></td>
+          <td>{{ news.date }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3">No news for the selected date range.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+{% endblock %}
+
+
+

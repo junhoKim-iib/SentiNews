@@ -13,6 +13,8 @@ import tensorflow as tf
 import tensorflow_addons as tfa
 from transformers import BertTokenizer, TFBertForSequenceClassification
 from django.db import IntegrityError
+from .models import MainNews, StockNews, MainSentiment, StockSentiment
+from django.db.models import Q
 # import transformers
 
 # X_data 는 뉴스 내용을 문장 단위로 쪼개서 저장한 문자열 리스트
@@ -58,15 +60,23 @@ def convert_data(X_data):
 
 # 뉴스 모델과 저장할 감성 모델을 인자로 받음
 # 
-def news_analysis(news_model, analysis_model, news_list):
+def news_analysis(date, company=None):
     obj_list = []
     model_path = 'best_model.h5'
     MODEL_NAME = "klue/bert-base"
     tokenizer = BertTokenizer.from_pretrained(MODEL_NAME)
 
     bert_model = tf.keras.models.load_model(model_path, custom_objects={'TFBertForSequenceClassification': TFBertForSequenceClassification})
-     
-    #news_list = news_model.objects.all()
+    
+    if company == None:
+        news_list = MainNews.objects.filter(~Q(mainsentiment__sentiment__isnull=False))
+        analysis_model = MainSentiment
+
+    else:
+        news_list = StockNews.objects.filter(~Q(stocksentiment__sentiment__isnull=False), company=company)
+        analysis_model = StockSentiment
+
+
     ## 테스트용
     #news_list = news_model.objects.filter(date__year='2023', date__month='3', date__day='10') # 테스트용
     #news_list = news_model.objects.all()[:10]# 뉴스 10개만 테스트
@@ -111,12 +121,8 @@ def news_analysis(news_model, analysis_model, news_list):
     #return obj_list 
 
 
-
-
-
-
 def main_keywords(obj_list):
-    key_model = KeyBERT('paraphrase-multilingual-MiniLM-L12-v2')
+    key_model = KeyBERT()
 
     total_title = ""
     for obj in obj_list:
@@ -133,7 +139,8 @@ def main_keywords(obj_list):
     okt = Okt()
     input_tokens = okt.nouns(total_title)
     input_text = ' '.join(input_tokens) # 리스트를 문자열로 합치기
-    keywords = key_model.extract_keywords(input_text, keyphrase_ngram_range=(1,1), top_n=20,use_maxsum=True , stop_words=stopwords)
+    print('start extract keywords')
+    keywords = key_model.extract_keywords(input_text, keyphrase_ngram_range=(1,1), top_n=13,use_maxsum=True , stop_words=stopwords)
     print(keywords)
     keywords_dict = dict(keywords)
     print(keywords_dict)
@@ -152,6 +159,7 @@ def main_keywords(obj_list):
     print("keywords: ", keywords)
   
     return img_base64
+
 
 
 

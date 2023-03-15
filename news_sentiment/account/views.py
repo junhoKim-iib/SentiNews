@@ -1,12 +1,11 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import RegistrationForm, LoginForm
-from django.views.generic import TemplateView
-
-
-class HomeView(TemplateView):
-    template_name = 'account/home.html'
 
 
 
@@ -48,10 +47,39 @@ def login_view(request): # login view
     return render(request, 'account/login.html', {'form': form})
 
 
+@login_required
 def logout_view(request):
     logout(request)
     return redirect('account:login')
 
 
+
+@login_required
 def mypage(request):
-    return render(request, 'account/mypage.html', {})
+    user = request.user
+    # 비밀번호 변경 폼 처리
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=user, data=request.POST)
+        print(form)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, '비밀번호가 변경되었습니다.')
+            return redirect('account:mypage')
+       
+            
+    else:
+        
+        form = PasswordChangeForm(user=user)
+    
+    return render(request, 'account/mypage.html', {'form': form})
+    
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        user = request.user
+        user.delete()
+        messages.success(request, '회원 탈퇴가 완료되었습니다.')
+        return redirect('analysis:home')
+    return render(request, 'account/delete_account.html')
