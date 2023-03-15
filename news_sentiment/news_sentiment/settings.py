@@ -44,6 +44,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_crontab',
     'analysis.apps.AnalysisConfig',
     'account.apps.AccountConfig',
     'django.contrib.admin',
@@ -53,6 +54,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+# 크롤링 스케쥴러
+CRONJOBS = [
+    ('0 0 * * *', 'analysis.cron.my_scheduled_job'),
+]
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
