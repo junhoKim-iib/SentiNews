@@ -3,7 +3,6 @@ from konlpy.tag import Okt
 from wordcloud import WordCloud
 from io import BytesIO
 import base64
-from konlpy.corpus import kolaw
 
 import numpy as np
 import nltk

@@ -54,8 +54,10 @@ def home(request):
 def stocks(request):
     date = datetime.now().strftime("%Y-%m-%d")
     # if user search stock news then get stock news and show it
-    if request.method == 'GET':
-        company = request.GET.get('company')
+    
+    company = request.GET.get('company')
+    if company:
+        print('company: ', company)
         
         # 뉴스가 존재하고 오늘자 뉴스라면 크롤링을 하지 않음
         if StockNews.objects.filter(company=company).exists() and \
@@ -65,7 +67,6 @@ def stocks(request):
         # 뉴스가 존재하지 않거나 오늘자 뉴스가 아니라면 크롤링을 하고 데이터베이스에 저장
         else:
             insert_stock_news(get_stock_news(company, 3))
-        
             news_analysis(date, company)
             stock_news = StockNews.objects.filter(company=company)
 
