@@ -72,6 +72,7 @@ def get_stock_news(name,max_page):
     data = []
     for page in range(1,max_page + 1):
         url = 'https://finance.naver.com/news/news_search.naver?q={q}&page={page}' # 검색어와 페이지 번호를 포함한 URL
+        print(name)
         q_enc = urllib.parse.quote_plus(name, encoding='euc-kr') # 한글 검색을 위한 인코딩. euc-kr을 사용해야 한글 검색이 가능
         res = requests.get(url.format(q=q_enc, page=page)) # 페이지 요청
         soup = BeautifulSoup(res.text, 'lxml')
@@ -101,6 +102,8 @@ def get_stock_news(name,max_page):
             res = requests.get(item['url'])
             soup = BeautifulSoup(res.text, 'lxml')
             elem_content = soup.select_one('#content')
+            if elem_content is None:
+                continue
             elem_content_extra = elem_content.find('div')
             if elem_content_extra:
                 elem_content_extra.decompose()
