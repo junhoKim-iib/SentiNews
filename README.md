@@ -35,7 +35,7 @@
     
     학습 데이터셋과 모델은 [https://github.com/ukairia777/finance_sentiment_corpus](https://github.com/ukairia777/finance_sentiment_corpus) 를 참고했습니다. 
     
-    뉴스 본문을 문장 단위로 나누어 분류를 진행합니다. 본문의 문장들에서 가장 많이 나온 감성을 라벨링합니다.
+    뉴스 본문을 문장 단위로 나누어 분류를 진행 본문의 문장들에서 가장 많이 나온 감성을 라벨링합니다.
     
 
 1. **wordcloud 생성**
