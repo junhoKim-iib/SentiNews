@@ -47,20 +47,17 @@ INSTALLED_APPS = [
     'django_crontab',
     'analysis.apps.AnalysisConfig',
     'account.apps.AccountConfig',
+    'board.apps.BoardConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
 ]
 
-# 크롤링 스케쥴러
-CRONJOBS = [
-    ('0 0 * * *', 'analysis.cron.my_scheduled_job'),
-]
-
-
+COMMENTS_APP = 'django.contrib.comments'
 
 
 MIDDLEWARE = [
@@ -159,3 +156,7 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGIN_URL = '/account/login/'  # 로그인 URL에 맞게 변경
+LOGIN_REDIRECT_URL = '/'  # 로그인 성공시 리다이렉트 URL
