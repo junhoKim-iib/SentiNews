@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %} SentiNews 게시판{% endblock  %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1>SentiNews  게시판</h1>
+            
+            <a href="{% url 'board:post_create' %}" class="btn btn-primary">글쓰기</a>
+            <!-- Add your board content here -->
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>작성일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in posts %}
+                    <tr>
+                        <td>{{ post.id }}</td>
+                        <td><a href="{% url 'board:post_detail' post.id %}">{{ post.title }}</a></td>
+                        <td>{{ post.author }}</td>
+                        <td>{{ post.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <!-- Add pagination here -->
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">처음</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">이전</a>
+                </li>
+                {% endif %}
+                <li class="page-item active">
+                    <span class="page-link">
+                        페이지 {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">다음</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">마지막</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

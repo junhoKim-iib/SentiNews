@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}SentiNews 게시판 상세{% endblock  %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <h1>{{ post.title }}</h1>
+                <p>{{ post.content }}</p>
+                <p>Author: {{ post.author }}</p>
+                <p>Published: {{ post.created_at }}</p>
+
+                {% if user == post.author %}
+                    <a href="{% url 'board:post_edit' post.id %}" class="btn btn-primary">수정</a>
+                    <a href="{% url 'board:post_delete' post.id %}" class="btn btn-danger">삭제</a>
+                {% endif %}
+                
+                <a href="{% url 'board:post_list' %}" class="btn btn-secondary">목록</a>
+                
+                <hr>
+                <h3>댓글</h3>
+                {% for comment in post.comment_set.all %}
+                    <p>{{ comment.content }}</p>
+                    <p>작성자: {{ comment.author }}</p>
+                    <p>작성일: {{ comment.created_at }}</p>
+                    <hr>
+                {% endfor %}
+                
+                <h3>댓글 작성</h3>
+                <form method="POST" action="{% url 'board:comment_create' post.id %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="comment_content">댓글 내용</label>
+                        <textarea class="form-control" id="comment_content" name="content" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">작성</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

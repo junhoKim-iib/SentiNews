@@ -1,0 +1,7 @@
+
+
+<form method="post" action="{% url 'comment_edit' comment.id %}" class="edit-comment-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">댓글 수정</button>
+</form>

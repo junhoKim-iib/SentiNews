@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <div class="container">
+        <h1 class="my-custom-class">Delete Post</h1>
+        <p>아래의 게시물을 삭제하시겠습니까?</p>
+        <p>{{ post.title }}</p>
+        <p>{{ post.content }}</p>
+        <p>{{ post.created_at }}</p>
+        
+        <form method="POST" action="{% url 'board:post_delete' post.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">삭제</button>
+            <a href="{% url 'board:post_detail' post.id %}" class="btn btn-secondary">취소</a>
+        </form>
+    </div>
+{% endblock %}
+
