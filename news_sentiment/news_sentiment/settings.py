@@ -160,3 +160,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/account/login/'  # 로그인 URL에 맞게 변경
 LOGIN_REDIRECT_URL = '/'  # 로그인 성공시 리다이렉트 URL
+
+CSRF_USE_SESSIONS = True # CSRF 토큰을 세션에 저장. Django 설정에서 AJAX 요청 허용
