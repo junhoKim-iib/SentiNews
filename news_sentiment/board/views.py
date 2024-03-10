@@ -5,11 +5,13 @@ from .forms import PostForm, CommentForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.http import JsonResponse
+from django.db.models import Count
 
 class PostListView(View):
     @method_decorator(login_required)
     def get(self, request):
-        posts = Post.objects.all().order_by('-created_at')
+        posts = Post.objects.annotate(comment_count=Count('comment')).order_by('-created_at')
         paginator = Paginator(posts, 10)  # Show 10 posts per page
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
@@ -17,6 +19,7 @@ class PostListView(View):
         context = {
             'page_obj': page_obj,
             'posts': posts,
+
         }
         
         return render(request, 'board/post_list.html', context)
@@ -111,13 +114,12 @@ class CommentDeleteView(View):
     @method_decorator(login_required)
     def post(self, request, pk):
         comment = get_object_or_404(Comment, pk=pk)
-        post_pk = comment.post.pk
-        comment.delete()
-        return redirect('board:post_detail', pk=post_pk)
+        if request.user != comment.author:
+            return JsonResponse({'error': '댓글을 삭제할 권한이 없습니다.'}, status=403)
 
-    def get(self, request, pk):
-        comment = get_object_or_404(Comment, pk=pk)
-        return render(request, 'board/comment_delete.html', {'comment': comment})
+        comment.delete()
+
+        return JsonResponse({'success': '댓글이 성공적으로 삭제되었습니다.'})
 
 
 class CommentEditView(View):
