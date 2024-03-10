@@ -17,25 +17,76 @@
                 
                 <a href="{% url 'board:post_list' %}" class="btn btn-secondary">목록</a>
                 
-                <hr>
-                <h3>댓글</h3>
+                
+                
                 {% for comment in post.comment_set.all %}
-                    <p>{{ comment.content }}</p>
-                    <p>작성자: {{ comment.author }}</p>
-                    <p>작성일: {{ comment.created_at }}</p>
-                    <hr>
+
+                <div class="media mb-4">
+                    <div class="media-body">
+                        <h5 class="mt-0">{{ comment.content }}</h5>
+                        <h5 class="mt-0">작성자: {{ comment.author }}</h5>
+                        <h5 class="mt-0">작성일: {{ comment.created_at }}</h5>
+                        {% if user == comment.author %}
+                             <a href="#" class="delete-comment-text" data-comment-id="{{ comment.id }}" onclick="return confirmDeleteComment(this)">삭제</a>
+                        {% endif %}
+                    </div>
+                </div>
+                
                 {% endfor %}
                 
-                <h3>댓글 작성</h3>
-                <form method="POST" action="{% url 'board:comment_create' post.id %}">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="comment_content">댓글 내용</label>
-                        <textarea class="form-control" id="comment_content" name="content" rows="3"></textarea>
+                
+                <div class="card my-4">
+                    <h5 class="card-header">댓글 작성</h5>
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'board:comment_create' post.id %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="comment_content">댓글 내용</label>
+                                <textarea class="form-control" id="comment_content" name="content" rows="3"></textarea>
+                            </div>
+                            <br>
+                            <button type="submit" class="btn btn-primary">작성</button>
+                        </form>
                     </div>
-                    <button type="submit" class="btn btn-primary">작성</button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
+
+
+    <script>
+    function confirmDeleteComment(element) {
+        var confirmed = confirm('정말로 삭제하시겠습니까?');
+
+        if (confirmed) {
+            // 삭제를 진행하는 코드
+            var commentId = element.getAttribute('data-comment-id');
+            console.log(commentId);
+            // AJAX 요청 보내기
+            $.ajax({
+                type: 'POST',
+                url: '/board/comment/' + commentId + '/delete/',
+                dataType: 'json',
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',  // Django에서 제공하는 CSRF 토큰
+                },
+                success: function(data) {
+                    // 성공적으로 삭제되면 메시지를 표시하고 페이지 리로드 또는 다른 동작 수행
+                    alert(data.success);
+                    location.reload();  // 페이지 리로드 예시
+                },
+                error: function(xhr, status, error) {
+                    // 삭제 실패 시 에러 메시지 표시
+                    alert(xhr.responseJSON.error);
+                }
+            });
+        } else {
+            // 사용자가 취소한 경우의 동작
+            alert('삭제가 취소되었습니다.');
+        }
+
+        return false;  // 기본 동작인 링크 이동을 막음
+    }
+</script>
+
 {% endblock %}
