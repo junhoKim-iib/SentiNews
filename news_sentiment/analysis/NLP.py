@@ -35,10 +35,7 @@ def convert_data(X_data):
         num_zeros = token.count(0)
         mask = [1] * (MAX_SEQ_LEN - num_zeros) + [0] * num_zeros
         
-        ### 이부분 수정해야함. 제목을 입력 데이터로 할까? 아니면 내용을 입력 데이터로 할까?
-        # 해결 : 내용과 제목을 합쳐서 입력 데이터로 사용하되 제목의 가중치를 20%로 줌
-        #        뉴스 리스트 전체를 예측하는 게 아니라 뉴스 내용을 문장 단위로 쪼개서 예측하고
-        #        그 결과를 뉴스 제목과 합쳐서 예측하는 방식으로 변경
+       
         # segment: 문장 전후관계 구분: 오직 한 문장이므로 모두 0으로 초기화
         segment = [0]*MAX_SEQ_LEN
 
@@ -55,12 +52,10 @@ def convert_data(X_data):
 
 
 
-
-
 # 뉴스 모델과 저장할 감성 모델을 인자로 받음
 # 
-def news_analysis(date, company=None):
-    obj_list = []
+def news_analysis(date=None, company=None):
+
     model_path = 'best_model.h5'
     MODEL_NAME = "klue/bert-base"
     tokenizer = BertTokenizer.from_pretrained(MODEL_NAME)
@@ -76,9 +71,6 @@ def news_analysis(date, company=None):
         analysis_model = StockSentiment
 
 
-    ## 테스트용
-    #news_list = news_model.objects.filter(date__year='2023', date__month='3', date__day='10') # 테스트용
-    #news_list = news_model.objects.all()[:10]# 뉴스 10개만 테스트
     i = 0
     for news in news_list:
         content = news.content # 뉴스 내용 불러오기 
@@ -101,8 +93,6 @@ def news_analysis(date, company=None):
             obj = analysis_model(news = news, sentiment = 2)
 
 
-        #obj_list.append(obj) # 뉴스와 감성을 저장할 객체 리스트에 저장
-
         try:
             obj.save() # DB에 저장
 
@@ -111,16 +101,13 @@ def news_analysis(date, company=None):
             continue
 
         i += 1
-        print(i)
+        print(f'{i}번 째 뉴스 진행: ')
 
-        # 테스트용
-        print(news.subject ,obj.sentiment) 
-        print(predicted_label)
 
-    #return obj_list 
 
 
 def main_keywords(obj_list):
+    print("obj list length in main_keywords function:", len(obj_list))
     key_model = KeyBERT()
 
     total_title = ""
@@ -128,7 +115,7 @@ def main_keywords(obj_list):
         total_title += obj.subject + " "
     print(1)
     # 입력 문장 전처리
-    input_text = obj.content # 최종 인풋 데이터
+    # input_text = obj.content # 최종 인풋 데이터
 
     # read stopwords.txt
     with open('stopwords.txt', 'r', encoding='utf-8') as f:

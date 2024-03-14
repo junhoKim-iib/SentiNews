@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        # migrations.DeleteModel(
-        #     name="MainSentiment",
-        # ),
+        migrations.DeleteModel(
+            name="MainSentiment",
+        ),
     ]

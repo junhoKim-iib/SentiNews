@@ -95,7 +95,7 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">#</th>
+          <th scope="col">No.</th>
           <th scope="col">Positive</th>
           <th scope="col">Date</th>
         </tr>
@@ -104,7 +104,7 @@
         {% for news in stock_positive %}
         <tr>
           <th scope="row">{{ forloop.counter }}</th>
-          <td><a href={{news.url}}>{{ news.subject }}<a></td>
+          <td><a href={{news.url}} target="_blank">{{ news.subject }}<a></td>
           <td>{{ news.date }}</td>
         </tr>
         {% empty %}
@@ -119,7 +119,7 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">#</th>
+          <th scope="col">No.</th>
           <th scope="col">Negative</th>
           <th scope="col">Date</th>
         </tr>
@@ -128,7 +128,7 @@
         {% for news in stock_negative %}
         <tr>
           <th scope="row">{{ forloop.counter }}</th>
-          <td><a href={{news.url}}>{{ news.subject }}</a></td>
+          <td><a href={{news.url}} target="_blank">{{ news.subject }}</a></td>
           <td>{{ news.date }}</td>
         </tr>
         {% empty %}
