@@ -42,23 +42,54 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
-    'django_crontab',
+    'django_crontab', # for django-crontab
+    # my apps
     'analysis.apps.AnalysisConfig',
-    'account.apps.AccountConfig',
+    'accounts.apps.AccountsConfig',
     'board.apps.BoardConfig',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+    'django.contrib.sites', # for django-allauth
+
+    # django-allauth
+    'allauth',
+    'allauth.account',
+
+    # for social login
+    'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.kakao',
+    # 'allauth.socialaccount.providers.naver',
+
 ]
 
-COMMENTS_APP = 'django.contrib.comments'
 
+# for django-allauth
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend', 
+]
+
+SITE_ID = 1 
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+
+# remember logged in user
+ACCOUNT_SESSION_REMEMBER = True
+SESSION_COOKIE_AGE = 3600  # 1 hour
+
+### 여기까지 django-allauth 설정
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -68,6 +99,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # django-allauth
+    'allauth.account.middleware.AccountMiddleware',
+    # for social login
+    # 'allauth.account.middleware.AuthenticationMiddleware',
 ]
 
 ROOT_URLCONF = 'news_sentiment.urls'
@@ -110,7 +146,7 @@ DATABASES = {
         'PORT': '5432',
     },
 }
-AUTH_USER_MODEL = 'account.User' # 커스텀 모델 사용시 추가 필요
+AUTH_USER_MODEL = 'accounts.User' # 커스텀 모델 사용시 추가 필요
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -134,7 +170,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko-kr'
 
 TIME_ZONE = 'UTC'
 
@@ -158,7 +194,24 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-LOGIN_URL = '/account/login/'  # 로그인 URL에 맞게 변경
+LOGIN_URL = '/accounts/login/'  # 로그인 URL에 맞게 변경
 LOGIN_REDIRECT_URL = '/'  # 로그인 성공시 리다이렉트 URL
+ACCOUNT_SIGNUP_REDIRECT_URL = '/'  # 회원가입 성공시 리다이렉트 URL
 
 CSRF_USE_SESSIONS = True # CSRF 토큰을 세션에 저장. Django 설정에서 AJAX 요청 허용
+
+
+# for social login (django-allauth)
+# Provider specific settings
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         # For each OAuth based provider, either add a ``SocialApp``
+#         # (``socialaccount`` app) containing the required client
+#         # credentials, or list them here:
+#         'APP': {
+#             'client_id': '123',
+#             'secret': '456',
+#             'key': ''
+#         }
+#     }
+# }
