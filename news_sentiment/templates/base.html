@@ -31,11 +31,11 @@
       </ul>
       <ul class="nav">
         {% if user.is_authenticated %}
-        <li class="nav-item"><a href="{% url 'account:mypage' %}" class="nav-link link-dark px-2">Mypage</a></li>
-        <li class="nav-item"><a href="{% url 'account:logout' %}" class="nav-link link-dark px-2">Logout</a></li>
+        <li class="nav-item"><a href="{% url 'account_reset_password' %}" class="nav-link link-dark px-2">Mypage</a></li>
+        <li class="nav-item"><a href="{% url 'account_logout' %}" class="nav-link link-dark px-2">Logout</a></li>
         {% else %}
-        <li class="nav-item"><a href="{% url 'account:login' %}" class="nav-link link-dark px-2">Login</a></li>
-        <li class="nav-item"><a href="{% url 'account:register' %}" class="nav-link link-dark px-2">Sign up</a></li>
+        <li class="nav-item"><a href="{% url 'account_login' %}" class="nav-link link-dark px-2">Login</a></li>
+        <li class="nav-item"><a href="{% url 'account_signup' %}" class="nav-link link-dark px-2">Sign up</a></li>
         {% endif %}
       </ul>
     </div>
