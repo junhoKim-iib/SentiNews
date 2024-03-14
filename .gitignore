@@ -13,4 +13,5 @@ media
 secrets.json
 best_model.h5
 news/
-news_sentiment/analysis/crawler_v1.py
+scraper/
+dataset_finished/
