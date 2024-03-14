@@ -9,7 +9,7 @@ from django.http import JsonResponse
 from django.db.models import Count
 
 class PostListView(View):
-    @method_decorator(login_required)
+    
     def get(self, request):
         posts = Post.objects.annotate(comment_count=Count('comment')).order_by('-created_at')
         paginator = Paginator(posts, 10)  # Show 10 posts per page
@@ -46,6 +46,10 @@ class PostDetailView(View):
     def get(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
         comments = Comment.objects.filter(post=post)
+
+        # 조회수 증가
+        post.view_count += 1
+        post.save()
 
         context = {
             'post': post,

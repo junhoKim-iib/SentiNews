@@ -16,15 +16,17 @@
                         <th>제목</th>
                         <th>작성자</th>
                         <th>작성일</th>
+                        <th>조회수</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for post in posts %}
                     <tr>
                         <td>{{ post.id }}</td>
-                        <td><a href="{% url 'board:post_detail' post.id %}">{{ post.title }}</a></td>
-                        <td>{{ post.author }}</td>
+                        <td><a href="{% url 'board:post_detail' post.id %}">{{ post.title }}  [{{post.comment_count}}]</a></td>
+                        <td>{{ post.author.username }}</td>
                         <td>{{ post.created_at }}</td>
+                        <td>{{ post.view_count }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

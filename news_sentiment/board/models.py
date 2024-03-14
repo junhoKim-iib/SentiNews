@@ -1,5 +1,7 @@
 from django.db import models
-from account.models import User
+from django.conf import settings
+
+User = settings.AUTH_USER_MODEL
 
 # Create your models here.
 
@@ -9,6 +11,8 @@ class Post(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    view_count = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
